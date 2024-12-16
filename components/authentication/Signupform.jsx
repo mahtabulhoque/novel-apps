@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Input from "../Input";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -15,8 +15,19 @@ const SignupForm = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [hydrated, setHydrated] = useState(false);
 
   const router = useRouter();
+
+  useEffect(() => {
+    setHydrated(true);
+  }, []);
+
+  if (!hydrated) {
+    return null
+  }
+
+ 
 
   const handleChange = (event) => {
     setError("");
