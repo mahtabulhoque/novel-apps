@@ -15,8 +15,10 @@ export async function POST(req) {
         return NextResponse.json ({ErrorMessage: "User Already Exist"})
        } 
 
+       const hashPassword = await bcrypt.hash(password, 10)
 
-       const newUser = await User.create({name, email, password})
+
+       const newUser = await User.create({name, email, password: hashPassword})
 
       return NextResponse.json(newUser, {status:201})
     } catch(error){

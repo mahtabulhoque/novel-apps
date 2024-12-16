@@ -60,6 +60,8 @@ const Navbar = () => {
               <Image
                 onClick={handleShowDropdown}
                 src={img1}
+                width={40} 
+                height={40}
                 alt="avatar"
                 sizes="100vw"
                 className="w-10 h-10 rounded-full cursor-pointer"
