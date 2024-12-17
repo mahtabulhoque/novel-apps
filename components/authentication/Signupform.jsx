@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import Input from "../Input";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import Swal from "sweetalert2";
 
 const initialState = {
   name: "",
@@ -24,23 +25,24 @@ const SignupForm = () => {
   }, []);
 
   if (!hydrated) {
-    return null
+    return null;
   }
-
- 
 
   const handleChange = (event) => {
     setError("");
     setState({ ...state, [event.target.name]: event.target.value });
   };
 
-
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     const { name, email, password } = state;
     if (!name || !email || !password) {
       setError("All fields are required");
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "All fields are required!",
+      });
       return;
     }
 
@@ -48,13 +50,24 @@ const SignupForm = () => {
 
     if (!emailPattern.test(email)) {
       setError("Invalid email format");
+      Swal.fire({
+        icon: "error",
+        title: "Invalid Email",
+        text: "Please enter a valid email address!",
+      });
       return;
     }
 
     if (password.length < 8) {
       setError("Password must be at least 8 characters long.");
+      Swal.fire({
+        icon: "error",
+        title: "Weak Password",
+        text: "Password must be at least 8 characters long!",
+      });
       return;
     }
+
     try {
       setIsLoading(true);
       const newUser = {
@@ -69,22 +82,37 @@ const SignupForm = () => {
         method: "POST",
         body: JSON.stringify(newUser),
       });
+
       if (response?.status === 201) {
-        setSuccess("Registration successful");
+        setSuccess("Registration successful!");
+        Swal.fire({
+          icon: "success",
+          title: "Registration Successful",
+          text: "Your account has been created. Redirecting to login...",
+          timer: 2000,
+          showConfirmButton: false,
+        });
         setTimeout(() => {
           router.push("/login", { scroll: false });
-        }, 1000);
+        }, 2000);
       } else {
-        setError("Error Here");
+        setError("Oops! This email already has an account.");
+        Swal.fire({
+          icon: "error",
+          title: "Account Exists",
+          text: "This email already has an account. Please try logging in.",
+        });
       }
     } catch (error) {
-      console.log(error);
+      Swal.fire({
+        icon: "error",
+        title: "Server Error",
+        text: "Something went wrong! Please try again later.",
+      });
     }
 
     setIsLoading(false);
   };
-
-
 
   return (
     <section className="container">
@@ -111,6 +139,7 @@ const SignupForm = () => {
           onChange={handleChange}
           value={state.email}
         />
+
         <Input
           label="Password"
           type="password"

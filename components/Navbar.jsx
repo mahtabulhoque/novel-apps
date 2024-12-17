@@ -1,25 +1,40 @@
 "use client";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import img1 from "@/public/image/img1.jpg";
 import { AiOutlineClose, AiOutlineMenu } from "react-icons/ai";
 import { usePathname } from "next/navigation";
+import { useSession, signOut } from "next-auth/react";
 
 const Navbar = () => {
+  const { data: session, status } = useSession();
   const [showDropdown, setShowDropdown] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const pathname = usePathname();
-  
-  const loggedIn = false;
 
-  const handleShowDropdown = () => setShowDropdown(true);
-  const handleHideDropdown = () => setShowDropdown(false);
+  // Toggle dropdown
+  const handleToggleDropdown = () => setShowDropdown((prev) => !prev);
+  const handleCloseDropdown = () => setShowDropdown(false);
 
+  // Toggle mobile menu
   const handleMobileMenu = () => setShowMobileMenu((prev) => !prev);
+  const handleCloseMobileMenu = () => setShowMobileMenu(false);
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    const handleOutsideClick = (e) => {
+      if (!e.target.closest(".dropdown-container")) {
+        handleCloseDropdown();
+      }
+    };
+
+    document.addEventListener("click", handleOutsideClick);
+    return () => document.removeEventListener("click", handleOutsideClick);
+  }, []);
 
   return (
-    <div className="container mx-auto max-w-screen-xl px-4 py-2 h-16 flex items-center justify-between">
+    <div className="container mx-auto max-w-screen-xl px-4 py-2 h-16 flex items-center justify-between relative">
       {/* Logo */}
       <Link href="/">
         <h2 className="text-4xl font-bold">
@@ -40,51 +55,52 @@ const Navbar = () => {
         <li>
           <Link
             href="/blog"
-            className={pathname === "/blog" ? "text-primaryColor font-bold" : ""}
+            className={
+              pathname === "/blog" ? "text-primaryColor font-bold" : ""
+            }
           >
             Blog
           </Link>
         </li>
-        {loggedIn ? (
+        {session?.user ? (
           <>
             <li>
               <Link
                 href="/create-blog"
-                className={pathname === "/create-blog" ? "text-primaryColor font-bold" : ""}
+                className={
+                  pathname === "/create-blog"
+                    ? "text-primaryColor font-bold"
+                    : ""
+                }
               >
                 Create
               </Link>
             </li>
             {/* Profile Dropdown */}
-            <div className="relative">
+            <div className="relative dropdown-container">
               <Image
-                onClick={handleShowDropdown}
-                src={img1}
-                width={40} 
+                onClick={handleToggleDropdown}
+                src={session?.user?.image || img1}
+                width={40}
                 height={40}
                 alt="avatar"
-                sizes="100vw"
                 className="w-10 h-10 rounded-full cursor-pointer"
               />
               {showDropdown && (
-                <div className="absolute top-full right-0 bg-white shadow-md rounded-md p-4">
-                  <AiOutlineClose
-                    onClick={handleHideDropdown}
-                    className="cursor-pointer text-gray-600"
-                  />
-                  <button
-                    onClick={handleHideDropdown}
-                    className="block mt-2 text-sm text-gray-700"
-                  >
-                    Logout
-                  </button>
+                <div className="absolute top-full right-0 bg-white shadow-md rounded-md p-4 z-20">
                   <Link
-                    onClick={handleHideDropdown}
                     href="/user"
-                    className="block mt-2 text-sm text-gray-700"
+                    onClick={handleCloseDropdown}
+                    className="block text-sm text-gray-700"
                   >
                     Profile
                   </Link>
+                  <button
+                    onClick={() => signOut({ callbackUrl: "/login" })}
+                    className="block text-sm text-gray-700 mb-2"
+                  >
+                    Logout
+                  </button>
                 </div>
               )}
             </div>
@@ -94,7 +110,9 @@ const Navbar = () => {
             <li>
               <Link
                 href="/signup"
-                className={pathname === "/signup" ? "text-primaryColor font-bold" : ""}
+                className={
+                  pathname === "/signup" ? "text-primaryColor font-bold" : ""
+                }
               >
                 Signup
               </Link>
@@ -102,7 +120,9 @@ const Navbar = () => {
             <li>
               <Link
                 href="/login"
-                className={pathname === "/login" ? "text-primaryColor font-bold" : ""}
+                className={
+                  pathname === "/login" ? "text-primaryColor font-bold" : ""
+                }
               >
                 Login
               </Link>
@@ -121,13 +141,15 @@ const Navbar = () => {
 
       {/* Mobile Menu */}
       {showMobileMenu && (
-        <div className="absolute top-16 left-1/2 right-1/2 w-full bg-white shadow-md p-4 z-10">
-          <ul className="flex flex-col gap-4">
+        <div className="absolute top-16 left-0 w-full bg-white shadow-md p-4 z-10">
+          <ul className="flex flex-col text-center gap-4">
             <li>
               <Link
                 href="/"
-                className={pathname === "/" ? "text-primaryColor font-bold" : ""}
-                onClick={handleMobileMenu}
+                onClick={handleCloseMobileMenu}
+                className={
+                  pathname === "/" ? "text-primaryColor font-bold" : ""
+                }
               >
                 Home
               </Link>
@@ -135,50 +157,55 @@ const Navbar = () => {
             <li>
               <Link
                 href="/blog"
-                className={pathname === "/blog" ? "text-primaryColor font-bold" : ""}
-                onClick={handleMobileMenu}
+                onClick={handleCloseMobileMenu}
+                className={
+                  pathname === "/blog" ? "text-primaryColor font-bold" : ""
+                }
               >
                 Blog
               </Link>
             </li>
-            {loggedIn ? (
+            {session?.user ? (
               <>
                 <li>
                   <Link
                     href="/create-blog"
-                    className={pathname === "/create-blog" ? "text-primaryColor font-bold" : ""}
-                    onClick={handleMobileMenu}
+                    onClick={handleCloseMobileMenu}
+                    className={
+                      pathname === "/create-blog"
+                        ? "text-primaryColor font-bold"
+                        : ""
+                    }
                   >
                     Create
                   </Link>
                 </li>
-                <div className="relative">
+
+                {/* Centered Profile Avatar */}
+                <div className="flex flex-col items-center justify-center gap-2 mt-4 dropdown-container">
                   <Image
-                    onClick={handleShowDropdown}
-                    src={img1}
+                    onClick={handleToggleDropdown}
+                    src={session?.user?.image || img1}
+                    width={40}
+                    height={40}
                     alt="avatar"
-                    sizes="100vw"
-                    className="w-10 h-10 rounded-full cursor-pointer"
+                    className="w-16 h-16 rounded-full cursor-pointer"
                   />
                   {showDropdown && (
-                    <div className="absolute top-0 left-0 bg-white shadow-md rounded-md p-4">
-                      <AiOutlineClose
-                        onClick={handleHideDropdown}
-                        className="cursor-pointer text-gray-600"
-                      />
-                      <button
-                        onClick={handleHideDropdown}
-                        className="block mt-2 text-sm text-gray-700"
-                      >
-                        Logout
-                      </button>
+                    <div className="absolute top-full mt-2 bg-white shadow-md rounded-md p-4 z-20 text-center">
                       <Link
-                        onClick={handleHideDropdown}
                         href="/user"
-                        className="block mt-2 text-sm text-gray-700"
+                        onClick={handleCloseDropdown}
+                        className="block text-sm text-gray-700"
                       >
                         Profile
                       </Link>
+                      <button
+                        onClick={() => signOut({ callbackUrl: "/login" })}
+                        className="block text-sm text-gray-700 mb-2"
+                      >
+                        Logout
+                      </button>
                     </div>
                   )}
                 </div>
@@ -188,8 +215,12 @@ const Navbar = () => {
                 <li>
                   <Link
                     href="/signup"
-                    className={pathname === "/signup" ? "text-primaryColor font-bold" : ""}
-                    onClick={handleMobileMenu}
+                    onClick={handleCloseMobileMenu}
+                    className={
+                      pathname === "/signup"
+                        ? "text-primaryColor font-bold"
+                        : ""
+                    }
                   >
                     Signup
                   </Link>
@@ -197,8 +228,10 @@ const Navbar = () => {
                 <li>
                   <Link
                     href="/login"
-                    className={pathname === "/login" ? "text-primaryColor font-bold" : ""}
-                    onClick={handleMobileMenu}
+                    onClick={handleCloseMobileMenu}
+                    className={
+                      pathname === "/login" ? "text-primaryColor font-bold" : ""
+                    }
                   >
                     Login
                   </Link>
