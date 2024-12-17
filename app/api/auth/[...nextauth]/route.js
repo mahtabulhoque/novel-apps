@@ -54,9 +54,22 @@ const authOption = {
 
             }
             return token;
+        },
+
+        async session ({session, token}){
+            if(token){
+                session.user._id = token._id;
+                session.user.accessToken = token.accessToken
+
+            }
+
+            return session;
         }
 
         
 
     }
 }
+
+const handler = NextAuth(authOption);
+export {handler as GET, handler as POST};

@@ -3,11 +3,25 @@
 import { useEffect, useState } from 'react';
 import Input from '../Input';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+
+const initialState = {
+  name: "",
+  email: "",
+  password: "",
+};
 
 const LoginForm = () => {
 
 
   const [hydrated, setHydrated] = useState(false);
+
+    const [state, setState] = useState(initialState);
+    const [error, setError] = useState("");
+    const [success, setSuccess] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
+
+    const router = useRouter();
 
   useEffect(() => {
     setHydrated(true);
@@ -17,11 +31,18 @@ const LoginForm = () => {
     return null
   }
 
+  const handleChange = (event) => {
+    setError("");
+    setState({ ...state, [event.target.name]: event.target.value });
+  };
+
+ 
+
 
 
   return (
     <section className="container">
-      <form className="border-2 border-paragraphColor rounded-lg max-w-sm mx-auto px-8 py-6 space-y-5">
+      <form onSubmit={handleSubmit} className="border-2 border-paragraphColor rounded-lg max-w-sm mx-auto px-8 py-6 space-y-5">
         <h2 className="text-center special-word">Login</h2>
         <Input
           label="Email"
