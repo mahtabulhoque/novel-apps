@@ -7,14 +7,14 @@ import "swiper/css/pagination";
 
 const Banner = () => {
   return (
-    <div className="max-w-[1440px] mx-auto">
+    <div className="">
       <Swiper
         pagination={{ clickable: true }}
         modules={[Pagination]}
         className="mySwiper"
       >
         <SwiperSlide>
-          <div className="relative w-full h-[300px] sm:h-[400px] lg:h-[800px]">
+          <div className="relative w-full h-[300px] sm:h-[400px] lg:h-[700px]">
             <img
               src="/image/banner1.jpg"
               alt="Slide 1"
@@ -34,7 +34,7 @@ const Banner = () => {
         </SwiperSlide>
 
         <SwiperSlide>
-          <div className="relative w-full h-[300px] sm:h-[400px] lg:h-[800px]">
+          <div className="relative w-full h-[300px] sm:h-[400px] lg:h-[700px]">
             <img
               src="/image/banner2.jpg"
               alt="Slide 2"
@@ -54,7 +54,7 @@ const Banner = () => {
         </SwiperSlide>
 
         <SwiperSlide>
-          <div className="relative w-full h-[300px] sm:h-[400px] lg:h-[800px]">
+          <div className="relative w-full h-[300px] sm:h-[400px] lg:h-[700px]">
             <img
               src="/image/banner3.webp"
               alt="Slide 3"
@@ -73,7 +73,7 @@ const Banner = () => {
         </SwiperSlide>
 
         <SwiperSlide>
-          <div className="relative w-full h-[300px] sm:h-[400px] lg:h-[800px]">
+          <div className="relative w-full h-[300px] sm:h-[400px] lg:h-[700px]">
             <img
               src="/image/banner4.jpg"
               alt="Slide 4"

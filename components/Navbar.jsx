@@ -34,7 +34,7 @@ const Navbar = () => {
   }, []);
 
   return (
-    <div className="container mx-auto max-w-screen-xl px-4 py-2 h-16 flex items-center justify-between relative">
+    <div className="max-w-7xl mx-auto px-4 py-2 h-16 flex items-center justify-between relative">
       {/* Logo */}
       <Link href="/">
         <h2 className="text-4xl font-bold">
@@ -54,21 +54,21 @@ const Navbar = () => {
         </li>
         <li>
           <Link
-            href="/blog"
+            href="/novel"
             className={
-              pathname === "/blog" ? "text-primaryColor font-bold" : ""
+              pathname === "/novel" ? "text-primaryColor font-bold" : ""
             }
           >
-            Blog
+            Novel
           </Link>
         </li>
         {session?.user ? (
           <>
             <li>
               <Link
-                href="/create-blog"
+                href="/create-novel"
                 className={
-                  pathname === "/create-blog"
+                  pathname === "/create-novel"
                     ? "text-primaryColor font-bold"
                     : ""
                 }
