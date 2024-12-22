@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import Input from "@/components/Input";
 import { useRouter } from "next/navigation";
 import TextArea from "@/components/Textarea";
@@ -102,18 +102,18 @@ const CreateNovel = () => {
         body: JSON.stringify(newNovel),
       });
 
-      if (response?.status === 201) {
+      const data = await response.json();
+      if (response.status === 201) {
         setSuccess("Chapter added successfully");
         setTimeout(() => {
           router.refresh();
           router.push("/novel");
         }, 1500);
       } else {
-        setError("Error adding the chapter. Please try again.");
-        
+        setError(data.error || "Error adding the chapter. Please try again.");
       }
     } catch (error) {
-      console.error(error);
+      console.error("An error occurred:", error);
       setError("An error occurred. Please try again.");
     }
 

@@ -4,25 +4,24 @@ const NovelSchema = new mongoose.Schema(
   {
     title: {
       type: String,
-      required: true,
-      min: 4,
+      required: [true, "Title is required"],
+      min: [4, "Title must be at least 4 characters"],
     },
     description: {
       type: String,
-      required: true,
-      min: 20,
+      required: [true, "Description is required"],
+      min: [20, "Description must be at least 20 characters"],
     },
     excerpt: {
       type: String,
-      required: true,
-      min: 10,
+      required: [true, "Excerpt is required"],
+      min: [10, "Excerpt must be at least 10 characters"],
     },
     quote: {
       type: String,
-      required: true,
-      min: 6,
+      required: [true, "Quote is required"],
+      min: [6, "Quote must be at least 6 characters"],
     },
-
     image: {
       id: {
         type: String,
@@ -31,10 +30,9 @@ const NovelSchema = new mongoose.Schema(
         type: String,
       },
     },
-
     category: {
       type: String,
-      required: true,
+      required: [true, "Category is required"],
       enum: [
         "Comedy",
         "Action",
@@ -49,16 +47,17 @@ const NovelSchema = new mongoose.Schema(
         "Paranormal",
       ],
     },
-
     authorId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
+      required: [true, "Author ID is required"],
     },
     likes: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      default: [],
-    },
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: "User",
+        default: []
+      },
+    
     comments: [
       {
         user: {
