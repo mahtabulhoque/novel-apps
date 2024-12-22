@@ -31,3 +31,30 @@ export async function POST(req) {
     return NextResponse.json({ message: "POST error (create blog)" });
   }
 }
+
+// Get Api
+
+
+export async function GET(req) {
+  await connect();
+
+  try {
+    const novels = await Novel.find({})
+    .populate({
+      path: "authorId",
+      select: "-password",
+
+    })
+    .sort({
+      createdAt: -1
+    });
+    return NextResponse.json(novels);
+  } catch (error) {
+    return NextResponse.json(
+      {message: "GET error"},
+    {
+      status:500,
+    }
+    )
+  }
+}

@@ -11,7 +11,7 @@ const initialState = {
   excerpt: "",
   quote: "",
   category: "Comedy",
-  photo: null,
+  photo: "",
 };
 
 const CreateNovel = () => {

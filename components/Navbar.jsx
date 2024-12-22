@@ -59,7 +59,7 @@ const Navbar = () => {
               pathname === "/novel" ? "text-primaryColor font-bold" : ""
             }
           >
-            Novel
+            Story
           </Link>
         </li>
         {session?.user ? (
